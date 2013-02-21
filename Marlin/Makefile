@@ -39,12 +39,12 @@
 #For Arduino Mega2560
 #MCU = atmega2560
 #For Sanguinololu
-MCU = atmega644p 
+MCU = atmega644p
 
 # Here you select "arduino", "Sanguino", "Gen7", ...
 HARDWARE_VARIANT 		= Sanguino
 # This defined the board you are compiling for
-HARDWARE_MOTHERBOARD	= 91
+HARDWARE_MOTHERBOARD	= 62
 
 # Arduino source install directory
 INSTALL_DIR = ../../arduino-0022
@@ -65,9 +65,10 @@ endif
 # if you are setting this to something other than 16MHz
 F_CPU = 16000000
 
-UPLOAD_RATE = 115200
+#UPLOAD_RATE = 115200
+UPLOAD_RATE = 38400
 AVRDUDE_PROGRAMMER = arduino
-PORT = /dev/arduino
+PORT = /dev/ttyUSB0
 
 TARGET = $(notdir $(CURDIR))
 
@@ -140,8 +141,8 @@ LDFLAGS = -lm
 # Programming support using avrdude. Settings and variables.
 AVRDUDE_PORT = $(PORT)
 AVRDUDE_WRITE_FLASH = -U flash:w:applet/$(TARGET).hex:i
-AVRDUDE_FLAGS = -D -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
-	-p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
+AVRDUDE_FLAGS = -D \
+	-p atmega644 -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 	-b $(UPLOAD_RATE)
 
 # Program settings
@@ -180,7 +181,7 @@ else
 endif
 
 # Default target.
-all: sizeafter
+all: build
 
 build: applet elf hex 
 
@@ -223,11 +224,7 @@ endif
 HEXSIZE = $(SIZE) --target=$(FORMAT) applet/$(TARGET).hex
 ELFSIZE = $(SIZE) --mcu=$(MCU) -C applet/$(TARGET).elf; \
           $(SIZE)  applet/$(TARGET).elf
-sizebefore:
-	$P if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(HEXSIZE); echo; fi
 
-sizeafter: build
-	$P if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(ELFSIZE); echo; fi
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
@@ -292,7 +289,7 @@ clean:
 	$P rm -rf applet
 
 
-.PHONY:	all build elf hex eep lss sym program coff extcoff clean depend applet_files sizebefore sizeafter
+.PHONY:	all build elf hex eep lss sym program coff extcoff clean depend applet_files
 
 # Automaticaly include the dependency files created by gcc
 -include ${wildcard applet/*.d}
