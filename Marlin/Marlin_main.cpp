@@ -1771,7 +1771,7 @@ void process_commands()
         SERIAL_ECHOLN("IN");
 
 
-/ PORTB
+// PORTB
         DDRB |= (1<<4);
         //PORTB ^= (1<<4);
         PORTB |= (1<<4);
