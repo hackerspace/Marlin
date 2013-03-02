@@ -49,7 +49,7 @@ MCU = atmega644p
 AVR_TOOLS_PATH ?= 
 
 #Programmer configuration
-UPLOAD_RATE        ?= 38400
+UPLOAD_RATE        ?= 57600
 AVRDUDE_PROGRAMMER ?= arduino
 UPLOAD_PORT        ?= /dev/ttyUSB0
 
