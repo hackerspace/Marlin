@@ -37,123 +37,24 @@
 # from the commandline with "make HARDWARE_MOTHERBOARD=71" for example
 
 # This defined the board you are compiling for (see Configuration.h for the options)
-HARDWARE_MOTHERBOARD ?= 11
+HARDWARE_MOTHERBOARD ?= 62
+HARDWARE_VARIANT 		= Sanguino
 
 # Arduino source install directory, and version number
-ARDUINO_INSTALL_DIR  ?= ../../arduino-0022
-ARDUINO_VERSION      ?= 22
+ARDUINO_INSTALL_DIR  ?= ../../arduino-0023
+ARDUINO_VERSION      ?= 23
+MCU = atmega644p
 
 # You can optionally set a path to the avr-gcc tools. Requires a trailing slash. (ex: /usr/local/avr-gcc/bin)
 AVR_TOOLS_PATH ?= 
 
 #Programmer configuration
-UPLOAD_RATE        ?= 115200
+UPLOAD_RATE        ?= 38400
 AVRDUDE_PROGRAMMER ?= arduino
-UPLOAD_PORT        ?= /dev/arduino
+UPLOAD_PORT        ?= /dev/ttyUSB0
 
 #Directory used to build files in, contains all the build files, from object files to the final hex file.
 BUILD_DIR          ?= applet
-
-############################################################################
-# Below here nothing should be changed...
-
-# Here the Arduino variant is selected by the board type
-# HARDWARE_VARIANT = "arduino", "Sanguino", "Gen7", ...
-# MCU = "atmega1280", "Mega2560", "atmega2560", "atmega644p", ...
-
-#Gen7
-ifeq ($(HARDWARE_MOTHERBOARD),10)
-HARDWARE_VARIANT ?= Gen7
-MCU              ?= atmega644 
-F_CPU            ?= 20000000
-else ifeq  ($(HARDWARE_MOTHERBOARD),11)
-HARDWARE_VARIANT ?= Gen7
-MCU              ?= atmega644p
-F_CPU            ?= 20000000
-else ifeq  ($(HARDWARE_MOTHERBOARD),12)
-HARDWARE_VARIANT ?= Gen7
-MCU              ?= atmega644p
-F_CPU            ?= 20000000
-else ifeq  ($(HARDWARE_MOTHERBOARD),13)
-HARDWARE_VARIANT ?= Gen7
-MCU              ?= atmega1284p
-F_CPU            ?= 20000000
-
-#RAMPS
-else ifeq  ($(HARDWARE_MOTHERBOARD),3)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-else ifeq  ($(HARDWARE_MOTHERBOARD),33)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-else ifeq  ($(HARDWARE_MOTHERBOARD),34)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-
-#Duemilanove w/ ATMega328P pin assignment
-else ifeq  ($(HARDWARE_MOTHERBOARD),4)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega328p
-
-#Gen6
-else ifeq  ($(HARDWARE_MOTHERBOARD),5)
-HARDWARE_VARIANT ?= Gen6
-MCU              ?= atmega664p
-else ifeq  ($(HARDWARE_MOTHERBOARD),51)
-HARDWARE_VARIANT ?= Gen6
-MCU              ?= atmega664p
-
-#Sanguinololu
-else ifeq  ($(HARDWARE_MOTHERBOARD),6)
-HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega1284p
-else ifeq  ($(HARDWARE_MOTHERBOARD),62)
-HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega1284p
-else ifeq  ($(HARDWARE_MOTHERBOARD),63)
-HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega1284p
-
-#Ultimaker
-else ifeq  ($(HARDWARE_MOTHERBOARD),7)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-else ifeq  ($(HARDWARE_MOTHERBOARD),71)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega1280
-
-#Teensylu
-else ifeq  ($(HARDWARE_MOTHERBOARD),8)
-HARDWARE_VARIANT ?= Teensyduino
-MCU              ?= at90usb1286
-
-#Gen3+
-else ifeq  ($(HARDWARE_MOTHERBOARD),9)
-HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega644p
-
-#Megatronics
-else ifeq  ($(HARDWARE_MOTHERBOARD),70)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-
-#Alpha OMCA board
-else ifeq  ($(HARDWARE_MOTHERBOARD),90)
-HARDWARE_VARIANT ?= SanguinoA
-MCU              ?= atmega644
-
-#Final OMCA board
-else ifeq  ($(HARDWARE_MOTHERBOARD),91)
-HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega644p
-
-#Rambo
-else ifeq  ($(HARDWARE_MOTHERBOARD),301)
-HARDWARE_VARIANT ?= arduino
-MCU              ?= atmega2560
-
-endif
-
 # Be sure to regenerate speed_lookuptable.h with create_speed_lookuptable.py
 # if you are setting this to something other than 16MHz
 # Set to 16Mhz if not yet set.
@@ -189,7 +90,7 @@ SRC = wiring.c \
 	wiring_shift.c WInterrupts.c
 CXXSRC = WMath.cpp WString.cpp Print.cpp Marlin_main.cpp	\
 	MarlinSerial.cpp Sd2Card.cpp SdBaseFile.cpp SdFatUtil.cpp	\
-	SdFile.cpp SdVolume.cpp motion_control.cpp planner.cpp		\
+	SdFile.cpp SdVolume.cpp motion_control.cpp planner.cpp vector_3.cpp	\
 	stepper.cpp temperature.cpp cardreader.cpp ConfigurationStore.cpp
 CXXSRC += LiquidCrystal.cpp ultralcd.cpp SPI.cpp
 
@@ -245,8 +146,8 @@ LDFLAGS = -lm
 # Programming support using avrdude. Settings and variables.
 AVRDUDE_PORT = $(UPLOAD_PORT)
 AVRDUDE_WRITE_FLASH = -U flash:w:$(BUILD_DIR)/$(TARGET).hex:i
-AVRDUDE_FLAGS = -D -C $(ARDUINO_INSTALL_DIR)/hardware/tools/avrdude.conf \
-	-p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
+AVRDUDE_FLAGS = -D -V \
+	-p atmega644 -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 	-b $(UPLOAD_RATE)
 
 # Program settings

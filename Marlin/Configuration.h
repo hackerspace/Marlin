@@ -9,12 +9,7 @@
 //Implementation of an idea by Prof Braino to inform user that any changes made
 //to this build by the user have been successfully uploaded into firmware.
 #define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time
-#define STRING_CONFIG_H_AUTHOR "(none, default config)" //Who made the changes.
-
-// SERIAL_PORT selects which serial port should be used for communication with the host.
-// This allows the connection of wireless adapters (for instance) to non-default port pins.
-// Serial port 0 is still used by the Arduino bootloader regardless of this setting.
-#define SERIAL_PORT 0
+#define STRING_CONFIG_H_AUTHOR "rm" //Who made the changes.
 
 // This determines the communication speed of the printer
 #define BAUDRATE 250000
@@ -44,7 +39,7 @@
 // Rambo = 301
 
 #ifndef MOTHERBOARD
-#define MOTHERBOARD 33
+#define MOTHERBOARD 62
 #endif
 
 
@@ -76,7 +71,7 @@
 #define TEMP_SENSOR_0 7
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_BED 0
+#define TEMP_SENSOR_BED 7
 
 // Actual temperature must be close to target for this long before M109 returns success
 #define TEMP_RESIDENCY_TIME 10	// (seconds)
@@ -117,9 +112,9 @@
 
 // If you are using a preconfigured hotend then you can use one of the value sets by uncommenting it
 // Ultimaker
-    #define  DEFAULT_Kp 30.5
-    #define  DEFAULT_Ki 1.8  
-    #define  DEFAULT_Kd 214.88
+    #define  DEFAULT_Kp 22.2
+    #define  DEFAULT_Ki 1.08  
+    #define  DEFAULT_Kd 114
 
 // Makergear
 //    #define  DEFAULT_Kp 7.0
@@ -176,7 +171,7 @@
 //if PREVENT_DANGEROUS_EXTRUDE is on, you can still disable (uncomment) very long bits of extrusion separately.
 #define PREVENT_LENGTHY_EXTRUDE
 
-#define EXTRUDE_MINTEMP 170
+#define EXTRUDE_MINTEMP 220
 #define EXTRUDE_MAXLENGTH (X_MAX_LENGTH+Y_MAX_LENGTH) //prevent extrusion of very large distances.
 
 //===========================================================================
@@ -209,9 +204,9 @@
 #endif
 
 // The pullups are needed if you directly connect a mechanical endswitch between the signal and ground pins.
-const bool X_ENDSTOPS_INVERTING = false; // set to true to invert the logic of the endstops. 
-const bool Y_ENDSTOPS_INVERTING = false; // set to true to invert the logic of the endstops. 
-const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of the endstops. 
+const bool X_ENDSTOPS_INVERTING = true; // set to true to invert the logic of the endstops. 
+const bool Y_ENDSTOPS_INVERTING = true; // set to true to invert the logic of the endstops. 
+const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of the endstops. 
 //#define DISABLE_MAX_ENDSTOPS
 
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
@@ -229,20 +224,20 @@ const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of t
 #define INVERT_X_DIR true    // for Mendel set to false, for Orca set to true
 #define INVERT_Y_DIR false    // for Mendel set to true, for Orca set to false
 #define INVERT_Z_DIR true     // for Mendel set to false, for Orca set to true
-#define INVERT_E0_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
+#define INVERT_E0_DIR true   // for direct drive extruder v9 set to true, for geared extruder set to false
 #define INVERT_E1_DIR false    // for direct drive extruder v9 set to true, for geared extruder set to false
 #define INVERT_E2_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
 
 // ENDSTOP SETTINGS:
 // Sets direction of endstops when homing; 1=MAX, -1=MIN
-#define X_HOME_DIR 1
-#define Y_HOME_DIR 1
-#define Z_HOME_DIR 1
+#define X_HOME_DIR -1
+#define Y_HOME_DIR -1
+#define Z_HOME_DIR -1
 
 #define ENABLE_AUTO_BED_LEVELING // Delete the comment to enable (remove // at the start of the line)
 
 #ifdef ENABLE_AUTO_BED_LEVELING
-  #define LOWER_AND_RAISE_Z_PROBE // Comment this out (using // at the start of the line) to disable the mechanical lowering and rasing of the z probe
+  //#define LOWER_AND_RAISE_Z_PROBE // Comment this out (using // at the start of the line) to disable the mechanical lowering and rasing of the z probe
 
   // these are not used yet but will be soon
   #define X_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED 38
@@ -256,73 +251,46 @@ const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of t
   #define FRONT_PROBE_BED_POSITION 40
 
   // these are the offsets to the prob relative to the extruder tip
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -40
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 10
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER -3.5
+  #define X_PROBE_OFFSET_FROM_EXTRUDER 0
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER -20
 #endif
 
 #define min_software_endstops true //If true, axis won't move to coordinates less than HOME_POS.
 #define max_software_endstops true  //If true, axis won't move to coordinates greater than the defined lengths below.
 // Travel limits after homing
-#define X_MAX_POS 188
+#define X_MAX_POS 180
 #define X_MIN_POS 0
-#define Y_MAX_POS 190
+#define Y_MAX_POS 195
 #define Y_MIN_POS 0
-#define Z_MAX_POS 131.78
+#define Z_MAX_POS 90
 #define Z_MIN_POS 0
 
 #define X_MAX_LENGTH (X_MAX_POS - X_MIN_POS)
 #define Y_MAX_LENGTH (Y_MAX_POS - Y_MIN_POS)
 #define Z_MAX_LENGTH (Z_MAX_POS - Z_MIN_POS)
 
-// The position of the homing switches
-//#define MANUAL_HOME_POSITIONS  // If defined, manualy programed locations will be used
-//#define BED_CENTER_AT_0_0  // If defined the center of the bed is defined as (0,0)
-
-//Manual homing switch locations:
-#define MANUAL_X_HOME_POS X_MAX_LENGTH
-#define MANUAL_Y_HOME_POS Y_MAX_LENGTH
-#define MANUAL_Z_HOME_POS Z_MAX_LENGTH
+// The position of the homing switches. Use MAX_LENGTH * -0.5 if the center should be 0, 0, 0
+#define X_HOME_POS 0
+#define Y_HOME_POS 0
+#define Z_HOME_POS 0
 
 //// MOVEMENT SETTINGS
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
 #define HOMING_FEEDRATE {50*60, 50*60, 4*60, 0}  // set the homing speeds (mm/min)
 
 // default settings 
-// useful constants
-#define PI 3.14159265
-#define MM_PER_INCH 25.4
 
-#define STEPS_PER_REVOLUTION_X 3200
-#define STEPS_PER_REVOLUTION_Y 6400
-#define STEPS_PER_REVOLUTION_Z 3200
-#define STEPS_PER_REVOLUTION_E 6400
-
-#define IDLER_TEETH 8
-
-#define BELT_PITCH_X (.2 * MM_PER_INCH)
-#define BELT_PITCH_Y (.2 * MM_PER_INCH)
-
-#define PITCH_OF_Z_ROD 1.25
-
-// makergear extruder box
-#define EXTRUDER_GEAR_RATIO (47.0/9.0)
-#define PINCH_WHEEL_DIAMETER 4.7
-
-#define AXIS_STEPS_PER_UNIT_X (STEPS_PER_REVOLUTION_X / IDLER_TEETH / BELT_PITCH_X)
-#define AXIS_STEPS_PER_UNIT_Y (STEPS_PER_REVOLUTION_Y / IDLER_TEETH / BELT_PITCH_Y)
-#define AXIS_STEPS_PER_UNIT_Z (STEPS_PER_REVOLUTION_Z / PITCH_OF_Z_ROD)
-#define AXIS_STEPS_PER_UNIT_E (STEPS_PER_REVOLUTION_E * EXTRUDER_GEAR_RATIO / (PINCH_WHEEL_DIAMETER * PI))
-
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {AXIS_STEPS_PER_UNIT_X, AXIS_STEPS_PER_UNIT_Y, AXIS_STEPS_PER_UNIT_Z, AXIS_STEPS_PER_UNIT_E}
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200*8/3,760*1.1}  // default steps per unit for ultimaker 
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 3200/1.25,780}
 #define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 45}    // (mm/sec)    
-#define DEFAULT_MAX_ACCELERATION      {2500,750,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_MAX_ACCELERATION      {900,900,80,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves 
 #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for r retracts
 
 // 
-#define DEFAULT_XYJERK                8.0    // (mm/sec)
+#define DEFAULT_XYJERK                20.0    // (mm/sec)
 #define DEFAULT_ZJERK                 0.4     // (mm/sec)
 #define DEFAULT_EJERK                 5.0    // (mm/sec)
 
@@ -348,26 +316,12 @@ const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of t
 //#define ULTIMAKERCONTROLLER //as available from the ultimaker online store.
 //#define ULTIPANEL  //the ultipanel as on thingiverse
 
-// The RepRapDiscount Smart Controller
-// http://reprap.org/wiki/RepRapDiscount_Smart_Controller
-//#define REPRAP_DISCOUNT_SMART_CONTROLLER
 
-
-//automatic expansion
-#if defined(ULTIMAKERCONTROLLER) || defined(REPRAP_DISCOUNT_SMART_CONTROLLER)
+#ifdef ULTIMAKERCONTROLLER    //automatic expansion
  #define ULTIPANEL
  #define NEWPANEL
 #endif 
-
-// Preheat Constants
-#define PLA_PREHEAT_HOTEND_TEMP 180 
-#define PLA_PREHEAT_HPB_TEMP 70
-#define PLA_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
-
-#define ABS_PREHEAT_HOTEND_TEMP 240
-#define ABS_PREHEAT_HPB_TEMP 100
-#define ABS_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
-
+ 
 
 #ifdef ULTIPANEL
 //  #define NEWPANEL  //enable this if you have a click-encoder panel
@@ -376,6 +330,15 @@ const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of t
   #define LCD_WIDTH 20
   #define LCD_HEIGHT 4
   
+// Preheat Constants
+  #define PLA_PREHEAT_HOTEND_TEMP 180 
+  #define PLA_PREHEAT_HPB_TEMP 70
+  #define PLA_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
+
+  #define ABS_PREHEAT_HOTEND_TEMP 240
+  #define ABS_PREHEAT_HPB_TEMP 100
+  #define ABS_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
+
 #else //no panel but just lcd 
   #ifdef ULTRA_LCD
     #define LCD_WIDTH 16
@@ -389,9 +352,6 @@ const bool Z_ENDSTOPS_INVERTING = false; // set to true to invert the logic of t
 // M240  Triggers a camera by emulating a Canon RC-1 Remote
 // Data from: http://www.doc-diy.net/photo/rc-1_hacked/
 // #define PHOTOGRAPH_PIN     23
-
-// SF send wrong arc g-codes when using Arc Point as fillet procedure
-//#define SF_ARC_FIX
 
 #include "Configuration_adv.h"
 #include "thermistortables.h"

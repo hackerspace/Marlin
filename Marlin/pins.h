@@ -708,7 +708,7 @@
 
 #define LED_PIN            -1
 
-#define FAN_PIN            -1 
+#define FAN_PIN            4
 
 #ifdef MELZI
 #define LED_PIN            28
