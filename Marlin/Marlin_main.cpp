@@ -209,6 +209,7 @@ unsigned long stoptime=0;
 
 static uint8_t tmp_extruder;
 
+unsigned char servo_pos;
 
 bool Stopped=false;
 
@@ -1761,6 +1762,47 @@ void process_commands()
     case 503: // print settings currently in memory
     {
         Config_PrintSettings();
+    }
+    case 666:
+    {
+
+//SREG &= ~(1 << 7);  //disable interrupts
+// SREG |= (1 << 7);  //enable interrupts
+        SERIAL_ECHOLN("IN");
+
+
+/ PORTB
+        DDRB |= (1<<4);
+        //PORTB ^= (1<<4);
+        PORTB |= (1<<4);
+        //_delay_ms(1000);
+        //PORTB ^= (1<<4);
+        //_delay_ms(1000);
+
+        //TCCR0A = 1<<WGM00|1<<WGM01|1<<COM0A1; 
+        //TCCR0A = 1<<WGM00|1<<WGM01|1<<COM0B0; 
+        //TCCR0B = 1<<CS00|1<<CS01|1<<CS02;
+        TCCR0A = 1<<WGM01|1<<COM0B0;
+        //TCCR0B = (1<<CS00)|(1<<CS02);
+        TCCR0B = (1<<CS00)|(1<<CS02); // #1024
+        //TCCR0B = (1<<CS01);
+        //TCCR0B = 1<<CS01; // div8
+//for(int v=0; v < 1000; v++)
+        OCR0A = 255;
+        //OCR0A = 20;
+/*for(;;) {
+       _delay_ms(2);
+}*/
+//for(OCR0A=1000; OCR0A != 2000; OCR0A ++) _delay_ms(2);
+/*
+        servo_pos = 0;
+        if(code_seen('S')) {
+            servo_pos = code_value();
+            SERIAL_ECHOLN(servo_pos);
+        }
+*/
+//OCR0A = 100;
+        SERIAL_ECHOLN("OUT");
     }
     break;
     case 907: // Set digital trimpot motor current using axis codes.
