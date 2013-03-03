@@ -363,6 +363,10 @@ void setup()
   }
 
 
+  SET_OUTPUT(SERVO_PWM_PIN);
+  SET_OUTPUT(SERVO_POWER_PIN);
+  WRITE(SERVO_POWER_PIN, HIGH);
+
   tp_init();    // Initialize temperature loop 
   plan_init();  // Initialize planner;
   watchdog_init();
@@ -1766,42 +1770,38 @@ void process_commands()
     case 666:
     {
 
-//SREG &= ~(1 << 7);  //disable interrupts
-// SREG |= (1 << 7);  //enable interrupts
         SERIAL_ECHOLN("IN");
-
-
-// PORTB
-        DDRB |= (1<<4);
-        //PORTB ^= (1<<4);
-        PORTB |= (1<<4);
-        //_delay_ms(1000);
-        //PORTB ^= (1<<4);
-        //_delay_ms(1000);
-
-        //TCCR0A = 1<<WGM00|1<<WGM01|1<<COM0A1; 
-        //TCCR0A = 1<<WGM00|1<<WGM01|1<<COM0B0; 
-        //TCCR0B = 1<<CS00|1<<CS01|1<<CS02;
-        TCCR0A = 1<<WGM01|1<<COM0B0;
-        //TCCR0B = (1<<CS00)|(1<<CS02);
-        TCCR0B = (1<<CS00)|(1<<CS02); // #1024
-        //TCCR0B = (1<<CS01);
-        //TCCR0B = 1<<CS01; // div8
-//for(int v=0; v < 1000; v++)
-        OCR0A = 255;
-        //OCR0A = 20;
-/*for(;;) {
-       _delay_ms(2);
-}*/
-//for(OCR0A=1000; OCR0A != 2000; OCR0A ++) _delay_ms(2);
-/*
-        servo_pos = 0;
-        if(code_seen('S')) {
-            servo_pos = code_value();
-            SERIAL_ECHOLN(servo_pos);
+        DDRA = 1;
+        PORTA = 1;
+       // pinMode(SERVO_POWER_PIN, OUTPUT);
+       // digitalWrite(SERVO_POWER_PIN, 0);
+        WRITE(SERVO_POWER_PIN, LOW);
+        /*for(;;) {
+        PORTA ^= 1;
+        delay(1000);
+        SERIAL_ECHOLN("P");
         }
-*/
-//OCR0A = 100;
+        */
+        //DDRB |= (1<<4);
+        SERIAL_ECHOLN("P");
+
+        for(int times=0; times<1; times++) {
+        for(int x = 1; x<=2; x++) {
+        for(int i=0; i < 50; i++) {
+          //PORTB |= (1<<4);
+          WRITE(SERVO_PWM_PIN, HIGH);
+          delay(x);
+          //PORTB &= ~(1<<4);
+          WRITE(SERVO_PWM_PIN, LOW);
+          delay(20-x);
+        }
+        SERIAL_ECHOLN("Q");
+        }
+        }
+
+        //digitalWrite(SERVO_POWER_PIN, 1);
+        //PORTA = 0;
+        WRITE(SERVO_POWER_PIN, HIGH);
         SERIAL_ECHOLN("OUT");
     }
     break;

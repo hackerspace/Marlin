@@ -709,6 +709,8 @@
 #define LED_PIN            -1
 
 #define FAN_PIN            4
+#define SERVO_POWER_PIN    31
+#define SERVO_PWM_PIN      4
 
 #ifdef MELZI
 #define LED_PIN            28
