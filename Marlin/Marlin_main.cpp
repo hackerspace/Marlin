@@ -686,6 +686,14 @@ static void run_z_probe() {
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 }
 
+static void enable_servo() {
+    WRITE(SERVO_POWER_PIN, (SERVO_INVERTED ? LOW : HIGH));
+}
+
+static void disable_servo() {
+    WRITE(SERVO_POWER_PIN, (SERVO_INVERTED ? HIGH : LOW));
+}
+
 static void do_blocking_move_to(float x, float y, float z) {
     float oldFeedRate = feedrate;
 
@@ -1771,38 +1779,22 @@ void process_commands()
     {
 
         SERIAL_ECHOLN("IN");
-        DDRA = 1;
-        PORTA = 1;
-       // pinMode(SERVO_POWER_PIN, OUTPUT);
-       // digitalWrite(SERVO_POWER_PIN, 0);
-        WRITE(SERVO_POWER_PIN, LOW);
-        /*for(;;) {
-        PORTA ^= 1;
-        delay(1000);
-        SERIAL_ECHOLN("P");
-        }
-        */
-        //DDRB |= (1<<4);
-        SERIAL_ECHOLN("P");
+        enable_servo();
 
         for(int times=0; times<1; times++) {
         for(int x = 1; x<=2; x++) {
         for(int i=0; i < 50; i++) {
-          //PORTB |= (1<<4);
           WRITE(SERVO_PWM_PIN, HIGH);
-          delay(x);
-          //PORTB &= ~(1<<4);
+          delayMicroseconds(x*1000);
           WRITE(SERVO_PWM_PIN, LOW);
-          delay(20-x);
+          delayMicroseconds((20-x)*1000);
         }
-        SERIAL_ECHOLN("Q");
+        //delay(1);
         }
         }
 
-        //digitalWrite(SERVO_POWER_PIN, 1);
-        //PORTA = 0;
-        WRITE(SERVO_POWER_PIN, HIGH);
-        SERIAL_ECHOLN("OUT");
+        disable_servo();
+        SERIAL_ECHOLN("ok");
     }
     break;
     case 907: // Set digital trimpot motor current using axis codes.
