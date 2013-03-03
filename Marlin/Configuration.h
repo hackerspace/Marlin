@@ -241,14 +241,14 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 
     // these are the positions on the bed to do the probing
   #define LEFT_PROBE_BED_POSITION 0
-  #define RIGHT_PROBE_BED_POSITION 140
-  #define BACK_PROBE_BED_POSITION 120
+  #define RIGHT_PROBE_BED_POSITION 145
+  #define BACK_PROBE_BED_POSITION 130
   #define FRONT_PROBE_BED_POSITION 0
 
   // these are the offsets to the prob relative to the extruder tip
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -34.2
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -60.3
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER -16.91
+  #define X_PROBE_OFFSET_FROM_EXTRUDER -33.7
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER -61.7
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER -17.03
 #endif
 
 #define min_software_endstops true //If true, axis won't move to coordinates less than HOME_POS.
@@ -256,7 +256,7 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 // Travel limits after homing
 #define X_MAX_POS 180
 #define X_MIN_POS 0
-#define Y_MAX_POS 195
+#define Y_MAX_POS 190
 #define Y_MIN_POS 0
 #define Z_MAX_POS 90
 #define Z_MIN_POS 0
@@ -278,8 +278,8 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200*8/3,760*1.1}  // default steps per unit for ultimaker 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 3200/1.25,780}
-#define DEFAULT_MAX_FEEDRATE          {500, 500, 4, 45}    // (mm/sec)    
-#define DEFAULT_MAX_ACCELERATION      {900,900,80,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
+#define DEFAULT_MAX_FEEDRATE          {500, 500, 4, 45}    // (mm/sec)
+#define DEFAULT_MAX_ACCELERATION      {9000,9000,80,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves 
 #define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for r retracts

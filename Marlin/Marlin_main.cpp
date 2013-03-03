@@ -988,7 +988,7 @@ void process_commands()
             //do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER, FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
             plan_buffer_line(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
                 FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
-                up_mm, current_position[E_AXIS], feedrate/30, active_extruder);
+                up_mm, current_position[E_AXIS], feedrate/20, active_extruder);
             st_synchronize();
             current_position[X_AXIS] = st_get_position_mm(X_AXIS);
             current_position[Y_AXIS] = st_get_position_mm(Y_AXIS);
@@ -1013,7 +1013,7 @@ void process_commands()
 
             do_blocking_move_to(RIGHT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
               FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
-              current_position[Z_AXIS]+1);
+              current_position[Z_AXIS]+2);
 
             run_z_probe();
             float z_at_xRight_yFront = current_position[Z_AXIS];
@@ -1032,7 +1032,7 @@ void process_commands()
 
             do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
                 BACK_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
-                current_position[Z_AXIS]+1);
+                current_position[Z_AXIS]+2);
 
             run_z_probe();
             float z_at_xLeft_yBack = current_position[Z_AXIS];
@@ -1045,6 +1045,7 @@ void process_commands()
             SERIAL_PROTOCOL(current_position[Z_AXIS]);
             SERIAL_PROTOCOLPGM("\n");
 
+
             clean_up_after_endstop_move();
 
 #if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
@@ -1053,7 +1054,17 @@ void process_commands()
                 float oldx = current_position[X_AXIS];
                 float oldy = current_position[Y_AXIS];
                 float oldz = current_position[Z_AXIS];
+
+                plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS],
+                  current_position[Z_AXIS]+2, current_position[E_AXIS], feedrate/30, active_extruder);
+                st_synchronize();
+
                 raise_z_probe();
+
+                plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS],
+                  current_position[Z_AXIS], current_position[E_AXIS], feedrate/30, active_extruder);
+                st_synchronize();
+
                 do_blocking_move_to(oldx, oldy, oldz);
             }
 #endif // #if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
