@@ -237,23 +237,18 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 #define ENABLE_AUTO_BED_LEVELING // Delete the comment to enable (remove // at the start of the line)
 
 #ifdef ENABLE_AUTO_BED_LEVELING
-  //#define LOWER_AND_RAISE_Z_PROBE // Comment this out (using // at the start of the line) to disable the mechanical lowering and rasing of the z probe
+  #define LOWER_AND_RAISE_Z_PROBE // Comment this out (using // at the start of the line) to disable the mechanical lowering and rasing of the z probe
 
-  // these are not used yet but will be soon
-  #define X_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED 38
-  #define Z_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED 113
-  #define Z_PROBE_LENGTH_PIVOT_TO_MOVE_ARM 15
-
-  // these are the positions on the bed to do the probing
-  #define LEFT_PROBE_BED_POSITION 30
+    // these are the positions on the bed to do the probing
+  #define LEFT_PROBE_BED_POSITION 0
   #define RIGHT_PROBE_BED_POSITION 140
-  #define BACK_PROBE_BED_POSITION 160
-  #define FRONT_PROBE_BED_POSITION 40
+  #define BACK_PROBE_BED_POSITION 120
+  #define FRONT_PROBE_BED_POSITION 0
 
   // these are the offsets to the prob relative to the extruder tip
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 0
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER -20
+  #define X_PROBE_OFFSET_FROM_EXTRUDER -34.2
+  #define Y_PROBE_OFFSET_FROM_EXTRUDER -60.3
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER -16.91
 #endif
 
 #define min_software_endstops true //If true, axis won't move to coordinates less than HOME_POS.
@@ -283,7 +278,7 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200*8/3,760*1.1}  // default steps per unit for ultimaker 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 3200/1.25,780}
-#define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 45}    // (mm/sec)    
+#define DEFAULT_MAX_FEEDRATE          {500, 500, 4, 45}    // (mm/sec)    
 #define DEFAULT_MAX_ACCELERATION      {900,900,80,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          3000    // X, Y, Z and E max acceleration in mm/s^2 for printing moves 

@@ -209,8 +209,6 @@ unsigned long stoptime=0;
 
 static uint8_t tmp_extruder;
 
-unsigned char servo_pos;
-
 bool Stopped=false;
 
 //===========================================================================
@@ -659,7 +657,7 @@ static void set_bed_level_equation(float z_at_xLeft_yFront, float z_at_xRight_yF
 
 static void run_z_probe() {
     plan_bed_level_matrix.set_to_identity();
-    feedrate = homing_feedrate[Z_AXIS];
+    feedrate = homing_feedrate[Z_AXIS]/2;
 
     // move down until you find the bed
     float zPosition = -10;
@@ -676,7 +674,7 @@ static void run_z_probe() {
     st_synchronize();
 
     // move back down slowly to find bed
-    feedrate = homing_feedrate[Z_AXIS]/4; 
+    feedrate = homing_feedrate[Z_AXIS]/4;
     zPosition -= home_retract_mm(Z_AXIS) * 2;
     plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], zPosition, current_position[E_AXIS], feedrate/60, active_extruder);
     st_synchronize();
@@ -692,6 +690,27 @@ static void enable_servo() {
 
 static void disable_servo() {
     WRITE(SERVO_POWER_PIN, (SERVO_INVERTED ? HIGH : LOW));
+}
+
+static void move_servo(int where) {
+    for(int i=0; i < 20; i++) {
+      WRITE(SERVO_PWM_PIN, HIGH);
+      delay(where);
+      WRITE(SERVO_PWM_PIN, LOW);
+      delay(20-where);
+    }
+}
+
+static void servo_up() {
+  enable_servo();
+  move_servo(2);
+  disable_servo();
+}
+
+static void servo_down() {
+  enable_servo();
+  move_servo(1);
+  disable_servo();
 }
 
 static void do_blocking_move_to(float x, float y, float z) {
@@ -734,39 +753,11 @@ static void clean_up_after_endstop_move() {
 
 #if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
 static void lower_z_probe() {
-  plan_bed_level_matrix.set_to_identity();
-  // TODO: make this movement based off of X_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED, Z_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED, and Z_PROBE_LENGTH_PIVOT_TO_MOVE_ARM
-  // move to the correct z
-  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], Z_MAX_POS - 14);
-  // move to the correct x
-  do_blocking_move_relative(-162, 0, 0);
-  // start pushing the pin // We could write the equation for the arc instead.
-  do_blocking_move_relative(1, 0, 4);
-  do_blocking_move_relative(1, 0, 1);
-  do_blocking_move_relative(2, 0, 1);
-  do_blocking_move_relative(2, 0, 0);
-  do_blocking_move_relative(4, 0, 1);
-  do_blocking_move_relative(2, 0, 0);
-  do_blocking_move_relative(-2, 0, 0);
-  do_blocking_move_relative(0, 0, -10);
+  servo_down();
 }
 
 static void raise_z_probe() {
-  plan_bed_level_matrix.set_to_identity();
-  // TODO: make this movement based off of X_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED, Z_POSITION_WHEN_PROBE_PIVOT_AND_PIN_ALIGNED, and Z_PROBE_LENGTH_PIVOT_TO_MOVE_ARM
-  // move to a position that is safe
-  do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], Z_MAX_POS - 15);
-  do_blocking_move_to(X_MAX_POS - 139, current_position[Y_AXIS], current_position[Z_AXIS]);
-  // get up close to the pin.
-  do_blocking_move_relative(0, 0, 12);
-  // start pushing the pin // We could write the equation for the arc instead.
-  do_blocking_move_relative(-3, 0, 1);
-  do_blocking_move_relative(-2, 0, 1);
-  do_blocking_move_relative(-2, 0, 1);
-  do_blocking_move_relative(-6, 0, -1);
-  do_blocking_move_relative(-4, 0, -2);
-  do_blocking_move_relative(-2, 0, -2);
-  do_blocking_move_relative(7, 0, 0);
+  servo_up();
 }
 #endif // #if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
 
@@ -976,6 +967,7 @@ void process_commands()
 #ifdef ENABLE_AUTO_BED_LEVELING
         // TODO: (Z_MIN_PIN > -1) should also be true.  I don't know the prefered way to ensure this.
         {
+            int up_mm = 25;
             st_synchronize();
             // make sure the bed_level_rotation_matrix is identity or the planner will get it incorectly
             //vector_3 corrected_position = plan_get_position_mm();
@@ -989,29 +981,20 @@ void process_commands()
             plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
             setup_for_endstop_move();
 
-#if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
+
+            feedrate = homing_feedrate[Z_AXIS]/2;
+
+            // move up so we can lower the probe
+            //do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER, FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
+            plan_buffer_line(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
+                FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
+                up_mm, current_position[E_AXIS], feedrate/30, active_extruder);
+            st_synchronize();
+            current_position[X_AXIS] = st_get_position_mm(X_AXIS);
+            current_position[Y_AXIS] = st_get_position_mm(Y_AXIS);
+            current_position[Z_AXIS] = st_get_position_mm(Z_AXIS);
+
             lower_z_probe();
-#endif // #if defined(ENABLE_AUTO_BED_LEVELING) && defined(LOWER_AND_RAISE_Z_PROBE)
-
-            feedrate = homing_feedrate[Z_AXIS];
-
-            // prob 1
-            do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], 40);
-            do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER, BACK_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
-            run_z_probe();
-            float z_at_xLeft_yBack = current_position[Z_AXIS];
-
-            SERIAL_PROTOCOLPGM("Bed x: ");
-            SERIAL_PROTOCOL(LEFT_PROBE_BED_POSITION);
-            SERIAL_PROTOCOLPGM(" y: ");
-            SERIAL_PROTOCOL(BACK_PROBE_BED_POSITION);
-            SERIAL_PROTOCOLPGM(" z: ");
-            SERIAL_PROTOCOL(current_position[Z_AXIS]);
-            SERIAL_PROTOCOLPGM("\n");
-
-            // prob 2
-            do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] + 10);
-            do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER, FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
             run_z_probe();
             float z_at_xLeft_yFront = current_position[Z_AXIS];
 
@@ -1023,10 +1006,15 @@ void process_commands()
             SERIAL_PROTOCOL(current_position[Z_AXIS]);
             SERIAL_PROTOCOLPGM("\n");
 
-            // prob 3
-            do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS] + 10);
-            // the current position will be updated by the blocking move so the head will not lower on this next call.
-            do_blocking_move_to(RIGHT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER, FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
+            // prob front right
+            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS],
+              current_position[Z_AXIS]+5, current_position[E_AXIS], feedrate/30, active_extruder);
+            st_synchronize();
+
+            do_blocking_move_to(RIGHT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
+              FRONT_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
+              current_position[Z_AXIS]+1);
+
             run_z_probe();
             float z_at_xRight_yFront = current_position[Z_AXIS];
 
@@ -1034,6 +1022,25 @@ void process_commands()
             SERIAL_PROTOCOL(RIGHT_PROBE_BED_POSITION);
             SERIAL_PROTOCOLPGM(" y: ");
             SERIAL_PROTOCOL(FRONT_PROBE_BED_POSITION);
+            SERIAL_PROTOCOLPGM(" z: ");
+            SERIAL_PROTOCOL(current_position[Z_AXIS]);
+            SERIAL_PROTOCOLPGM("\n");
+
+            // probe back left
+            plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS],
+              current_position[Z_AXIS]+5, current_position[E_AXIS], feedrate/30, active_extruder);
+
+            do_blocking_move_to(LEFT_PROBE_BED_POSITION - X_PROBE_OFFSET_FROM_EXTRUDER,
+                BACK_PROBE_BED_POSITION - Y_PROBE_OFFSET_FROM_EXTRUDER,
+                current_position[Z_AXIS]+1);
+
+            run_z_probe();
+            float z_at_xLeft_yBack = current_position[Z_AXIS];
+
+            SERIAL_PROTOCOLPGM("Bed x: ");
+            SERIAL_PROTOCOL(LEFT_PROBE_BED_POSITION);
+            SERIAL_PROTOCOLPGM(" y: ");
+            SERIAL_PROTOCOL(BACK_PROBE_BED_POSITION);
             SERIAL_PROTOCOLPGM(" z: ");
             SERIAL_PROTOCOL(current_position[Z_AXIS]);
             SERIAL_PROTOCOLPGM("\n");
@@ -1063,7 +1070,7 @@ void process_commands()
         // TODO: make sure the bed_level_rotation_matrix is identity or the planner will get set incorectly
         setup_for_endstop_move();
 
-        feedrate = homing_feedrate[Z_AXIS];
+        feedrate = homing_feedrate[Z_AXIS]/2;
 
         run_z_probe();
         SERIAL_PROTOCOLPGM("Bed Position X: ");
@@ -1775,26 +1782,16 @@ void process_commands()
     {
         Config_PrintSettings();
     }
-    case 666:
+    case 280: // probe up
     {
-
-        SERIAL_ECHOLN("IN");
-        enable_servo();
-
-        for(int times=0; times<1; times++) {
-        for(int x = 1; x<=2; x++) {
-        for(int i=0; i < 50; i++) {
-          WRITE(SERVO_PWM_PIN, HIGH);
-          delayMicroseconds(x*1000);
-          WRITE(SERVO_PWM_PIN, LOW);
-          delayMicroseconds((20-x)*1000);
-        }
-        //delay(1);
-        }
-        }
-
-        disable_servo();
-        SERIAL_ECHOLN("ok");
+        servo_up();
+        SERIAL_ECHOLN("Probe up");
+    }
+    break;
+    case 281: // probe down
+    {
+        servo_down();
+        SERIAL_ECHOLN("Probe down");
     }
     break;
     case 907: // Set digital trimpot motor current using axis codes.
