@@ -4,16 +4,16 @@
 
 
 # program name should not be changed...
-PROGRAM    = ATmegaBOOT_644P
+PROGRAM    = ATmegaBOOT_644
 
 # enter the target CPU frequency
 AVR_FREQ   = 16000000L
 
-MCU_TARGET = atmega644p
-LDSECTION  = --section-start=.text=0xF800
+MCU_TARGET = atmega644
+LDSECTION  = --section-start=.text=0x0E000
 
 OBJ        = $(PROGRAM).o
-OPTIMIZE   = -O2
+OPTIMIZE   = -Os
 
 DEFS       = 
 LIBS       = 
