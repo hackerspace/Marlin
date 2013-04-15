@@ -53,4 +53,6 @@ $(OBJ): ATmegaBOOT.c
 
 clean:
 	rm -rf *.o *.elf *.lst *.map *.sym *.lss *.eep *.srec *.bin *.hex
-	
+
+upload: all
+	avrdude -V -p atmega644 -c buspirate -P /dev/ttyUSB0 -U flash:w:ATmegaBOOT_644.hex:i
