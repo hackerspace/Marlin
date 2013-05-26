@@ -31,6 +31,7 @@
 #else
 # include "WProgram.h"
   //Arduino < 1.0.0 does not define this, so we need to do it ourselfs
+# define A0 0
 # define analogInputToDigitalPin(p) ((p) + A0)
 #endif
 
