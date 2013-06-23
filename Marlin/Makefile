@@ -49,7 +49,7 @@ MCU = atmega644p
 AVR_TOOLS_PATH ?= 
 
 #Programmer configuration
-UPLOAD_RATE        ?= 57600
+UPLOAD_RATE        ?= 38400
 AVRDUDE_PROGRAMMER ?= arduino
 UPLOAD_PORT        ?= /dev/ttyUSB0
 
@@ -147,7 +147,7 @@ LDFLAGS = -lm
 AVRDUDE_PORT = $(UPLOAD_PORT)
 AVRDUDE_WRITE_FLASH = -U flash:w:$(BUILD_DIR)/$(TARGET).hex:i
 AVRDUDE_FLAGS = -D -V \
-	-p atmega644 -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
+	-p atmega644p -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 	-b $(UPLOAD_RATE)
 
 # Program settings
