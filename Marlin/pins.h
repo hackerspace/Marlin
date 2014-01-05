@@ -1039,6 +1039,12 @@
   #define FAN_SOFT_PWM
 #endif
 
+#ifdef NUM_SERVOS
+   #define SERVO0_PIN 27
+// pwm pin on top of ^ (or not!)
+//   #define SERVO0_PIN 4
+#endif
+
 #ifdef MELZI
  #define LED_PIN            27 /* On some broken versions of the Sanguino libraries the pin definitions are wrong, which then needs LED_PIN as pin 28. But you better upgrade your Sanguino libraries! See #368. */
  #define FAN_PIN            4 // Works for Panelolu2 too
