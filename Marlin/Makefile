@@ -47,7 +47,7 @@ ARDUINO_VERSION      ?= 105
 AVR_TOOLS_PATH ?=
 
 #Programmer configuration
-UPLOAD_RATE        ?= 57600
+UPLOAD_RATE        ?= 115200
 AVRDUDE_PROGRAMMER ?= arduino
 UPLOAD_PORT        ?= /dev/ttyUSB0
 
@@ -116,7 +116,7 @@ HARDWARE_VARIANT ?= Sanguino
 MCU              ?= atmega644p
 else ifeq  ($(HARDWARE_MOTHERBOARD),62)
 HARDWARE_VARIANT ?= Sanguino
-MCU              ?= atmega644p
+MCU              ?= atmega1284p
 else ifeq  ($(HARDWARE_MOTHERBOARD),63)
 HARDWARE_VARIANT ?= Sanguino
 MCU              ?= atmega644p
@@ -352,7 +352,7 @@ AVRDUDE_CONF = $(ARDUINO_INSTALL_DIR)/hardware/tools/avrdude.conf
 else
 AVRDUDE_CONF = $(ARDUINO_INSTALL_DIR)/hardware/tools/avr/etc/avrdude.conf
 endif
-AVRDUDE_FLAGS = -D \
+AVRDUDE_FLAGS = -D -V \
 	-p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 	-b $(UPLOAD_RATE)
 
