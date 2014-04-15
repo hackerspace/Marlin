@@ -153,9 +153,9 @@
 
 // If you are using a preconfigured hotend then you can use one of the value sets by uncommenting it
 // Ultimaker
-    #define  DEFAULT_Kp 22.2
-    #define  DEFAULT_Ki 1.08  
-    #define  DEFAULT_Kd 114  
+    #define  DEFAULT_Kp 24.2
+    #define  DEFAULT_Ki 1.08
+    #define  DEFAULT_Kd 114
 
 // Makergear
 //    #define  DEFAULT_Kp 7.0
@@ -297,26 +297,26 @@ const bool Z_ENDSTOPS_INVERTING = true; // set to true to invert the logic of th
 // For deltabots this means top and center of the cartesian print volume.
 #define MANUAL_X_HOME_POS 0
 #define MANUAL_Y_HOME_POS 0
-#define MANUAL_Z_HOME_POS 361.3  // Distance between nozzle and print surface after homing.
+#define MANUAL_Z_HOME_POS 361.1  // Distance between nozzle and print surface after homing.
 
 //// MOVEMENT SETTINGS
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
-#define HOMING_FEEDRATE {100*60, 100*60, 100*60, 0}  // set the homing speeds (mm/min)
+#define HOMING_FEEDRATE {100*50, 100*50, 100*50, 0}  // set the homing speeds (mm/min)
 
 // default settings
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 80, 97.4}
-#define DEFAULT_MAX_FEEDRATE          {300, 300, 300, 45}    // (mm/sec)
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {160, 160, 160, 97.4 * 2}
+#define DEFAULT_MAX_FEEDRATE          {130, 130, 130, 45}    // (mm/sec)
 #define DEFAULT_MAX_ACCELERATION      {4000,4000,4000,9000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 
-#define DEFAULT_ACCELERATION          3000   // X, Y, Z and E max acceleration in mm/s^2 for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  3000   // X, Y, Z and E max acceleration in mm/s^2 for r retracts
+#define DEFAULT_ACCELERATION          3500   // X, Y, Z and E max acceleration in mm/s^2 for printing moves
+#define DEFAULT_RETRACT_ACCELERATION  3500   // X, Y, Z and E max acceleration in mm/s^2 for r retracts
 
 // 
-#define DEFAULT_XYJERK                23.0   // (mm/sec)
-#define DEFAULT_ZJERK                 23.0   // (mm/sec)
-#define DEFAULT_EJERK                 23.0   // (mm/sec)
+#define DEFAULT_XYJERK                20.0   // (mm/sec)
+#define DEFAULT_ZJERK                 20.0   // (mm/sec)
+#define DEFAULT_EJERK                 5.0   // (mm/sec)
 
 //===========================================================================
 //=============================Additional Features===========================
