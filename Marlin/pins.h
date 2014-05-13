@@ -1029,6 +1029,7 @@
 #define Z_DIR_PIN          2
 #define Z_MAX_PIN         20
 #define Z_MIN_PIN         27
+//#define SERVO0_PIN        4
 
 #define E0_STEP_PIN         1
 #define E0_DIR_PIN          0
@@ -1056,7 +1057,7 @@
 #endif
 
 #ifdef NUM_SERVOS
-  #define SERVO0_PIN          -1
+  #define SERVO0_PIN          4
 
   #if NUM_SERVOS > 1
     #define SERVO1_PIN        -1
